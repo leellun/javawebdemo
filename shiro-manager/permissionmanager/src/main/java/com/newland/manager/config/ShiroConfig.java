@@ -1,25 +1,80 @@
 package com.newland.manager.config;
 
 import org.apache.shiro.authc.Authenticator;
-import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy;
 import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.spring.LifecycleBeanPostProcessor;
+import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
+import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
+import java.util.LinkedHashMap;
+
+@Configuration
 public class ShiroConfig {
-    public SecurityManager securityManager(){
-        DefaultWebSecurityManager securityManager=new DefaultWebSecurityManager();
+    @Bean
+    public SecurityManager securityManager() {
+        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
 
-        EhCacheManager cacheManager=new EhCacheManager();
+        //缓存设置
+        EhCacheManager cacheManager = new EhCacheManager();
         cacheManager.setCacheManagerConfigFile("classpath:ehcache.xml");
         securityManager.setCacheManager(cacheManager);
 
-        Authenticator authenticator=new ModularRealmAuthenticator();
+        //身份验证
+        Authenticator authenticator = new ModularRealmAuthenticator();
         ((ModularRealmAuthenticator) authenticator).setAuthenticationStrategy(new AtLeastOneSuccessfulStrategy());
         securityManager.setAuthenticator(authenticator);
 
-        HashedCredentialsMatcher
+        //数据源
+        securityManager.setRealm(shiroRealm());
+        return securityManager;
+    }
 
+    @Bean
+    public ShiroRealm shiroRealm() {
+        return new ShiroRealm();
+    }
+
+    @Bean
+    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+        return new LifecycleBeanPostProcessor();
+    }
+
+    @ConditionalOnBean(LifecycleBeanPostProcessor.class)
+    @Bean
+    public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator() {
+        return new DefaultAdvisorAutoProxyCreator();
+    }
+
+    @Bean
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
+        AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
+        advisor.setSecurityManager(securityManager);
+        return advisor;
+    }
+
+    @Bean
+    public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
+        ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
+        shiroFilterFactoryBean.setSecurityManager(securityManager);
+        LinkedHashMap<String, javax.servlet.Filter> filters = new LinkedHashMap<>();
+        filters.put("jwt", jwtFilter());
+        shiroFilterFactoryBean.setFilters(filters);
+        LinkedHashMap<String, String> filterChainDenitionMap = new LinkedHashMap<>();
+        filterChainDenitionMap.put("/**", "jwt");
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDenitionMap);
+        return shiroFilterFactoryBean;
+    }
+
+    @Bean
+    public JWTFilter jwtFilter() {
+        return new JWTFilter();
     }
 }

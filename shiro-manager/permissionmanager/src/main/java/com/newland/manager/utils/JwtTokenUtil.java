@@ -8,22 +8,25 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import java.util.Date;
 
 public class JwtTokenUtil {
+    private static final long EXPIRE_TIME = 1 * 60 * 60 * 1000;
     public static final String TOKEN_HEADER = "Authorization";
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String SECRET = "jwtsecret";
 
 
-    public static String createToken(Long userId) {
-        return JWT.create().withClaim("userId", userId).sign(Algorithm.HMAC256(SECRET));
+    public static String createToken(String username) {
+        return JWT.create().withClaim("username", username).withExpiresAt(new Date(System.currentTimeMillis() + EXPIRE_TIME)).sign(Algorithm.HMAC256(SECRET));
     }
 
-    public static Long getUserId(String jwtToken) {
+    public static String getUserNmae(String jwtToken) {
+        String username;
         try {
             DecodedJWT jwt = JWT.decode(jwtToken);
-            return jwt.getClaim("userId").asLong();
+            return jwt.getClaim("usernmae").asString();
         } catch (Exception e) {
-            return null;
+            username = null;
         }
+        return username;
     }
 
     public static boolean isExpire(String token) {
@@ -34,9 +37,9 @@ public class JwtTokenUtil {
         }
     }
 
-    public static boolean veryfy(String token, Long userId) {
+    public static boolean veryfy(String token, String username) {
         try {
-            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(SECRET)).withClaim("userId", userId).build();
+            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(SECRET)).withClaim("username", username).build();
             verifier.verify(token);
             return true;
         } catch (Exception e) {

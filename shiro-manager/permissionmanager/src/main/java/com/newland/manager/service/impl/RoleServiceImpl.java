@@ -6,6 +6,8 @@ import com.newland.manager.service.IRoleService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 /**
  * <p>
  *  服务实现类
@@ -17,4 +19,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IRoleService {
 
+    @Override
+    public Set<String> getUserRoles(String username) {
+        baseMapper.s
+    }
 }

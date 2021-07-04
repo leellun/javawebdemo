@@ -3,6 +3,8 @@ package com.newland.manager.service;
 import com.newland.manager.domain.Role;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.Set;
+
 /**
  * <p>
  *  服务类
@@ -12,5 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2021-07-03
  */
 public interface IRoleService extends IService<Role> {
-
+    Set<String> getUserRoles(String username);
 }
