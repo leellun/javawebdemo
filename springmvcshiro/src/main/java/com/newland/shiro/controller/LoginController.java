@@ -1,0 +1,54 @@
+package com.newland.shiro.controller;
+
+import com.newland.shiro.service.LoginService;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpSession;
+
+@Controller
+@RequestMapping("/loginController")
+public class LoginController {
+	
+	@Autowired
+	private LoginService loginService;
+    @RequiresRoles({"admin"})
+    @RequestMapping("/testShiroAnnotation")
+    public String testShiroAnnotation(HttpSession session){
+        session.setAttribute("key", "value12345");
+        loginService.testMethod();
+        return "redirect:/list.jsp";
+    }
+
+    @RequestMapping("/login")
+    public String login(@RequestParam("username") String username,
+                        @RequestParam("password") String password){
+        Subject currentUser = SecurityUtils.getSubject();
+
+        if (!currentUser.isAuthenticated()) {
+            // 把用户名和密码封装为 UsernamePasswordToken 对象
+            UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+            // rememberme
+            token.setRememberMe(true);
+            try {
+                // 执行登录.
+                currentUser.login(token);
+            }
+            // 所有认证时异常的父类.
+            catch (AuthenticationException ae) {
+                //unexpected condition?  error?
+                System.out.println("登录失败: " + ae.getMessage());
+            }
+        }
+
+        return "redirect:/list.jsp";
+    }
+	
+}
