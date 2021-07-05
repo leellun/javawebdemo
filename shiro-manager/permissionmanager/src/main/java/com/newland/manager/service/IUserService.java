@@ -17,4 +17,5 @@ import java.util.Map;
 public interface IUserService extends IService<User> {
 
     Response login(String username, String password);
+    User getUser(String username);
 }

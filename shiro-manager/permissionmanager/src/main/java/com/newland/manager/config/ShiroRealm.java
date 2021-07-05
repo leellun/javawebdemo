@@ -1,11 +1,13 @@
 package com.newland.manager.config;
 
-import com.newland.manager.service.IRoleService;
-import com.newland.manager.service.IUserRoleService;
-import com.newland.manager.service.IUserService;
+import com.newland.manager.domain.User;
+import com.newland.manager.manager.UserManager;
 import com.newland.manager.utils.JwtTokenUtil;
-import com.newland.manager.utils.RedisUtil;
-import org.apache.shiro.authc.*;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -16,17 +18,23 @@ import java.util.Set;
 
 public class ShiroRealm extends AuthorizingRealm {
     @Autowired
-    private IUserService userService;
-    @Autowired
-    private IRoleService roleService;
-    @Autowired
-    private RedisUtil redisUtil;
+    private UserManager userManager;
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         String token = (String) authenticationToken.getCredentials();
-
-        return new SimpleAuthenticationInfo(token, token, "sdfsdfsd");
+        String username = JwtTokenUtil.getUserNmae(token.toString());
+        if(JwtTokenUtil.isExpire(token)){
+            throw new RuntimeException("token已經過期了");
+        }
+        if(StringUtils.isEmpty(username)){
+            throw new RuntimeException("token校驗不通過");
+        }
+        User user=userManager.getUser(username);
+        if(user==null){
+            throw new RuntimeException("请重新登录");
+        }
+        return new SimpleAuthenticationInfo(token, token, username);
     }
 
     @Override
@@ -36,14 +44,11 @@ public class ShiroRealm extends AuthorizingRealm {
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
 
         // 获取用户角色集
-        Set<String> roleSet = (Set<String>) redisUtil.get(username);
-        if (roleSet == null) {
-            roleSet=
-        }
+        Set<String> roleSet = userManager.getRoles(username);
         simpleAuthorizationInfo.setRoles(roleSet);
 
         // 获取用户权限集
-        Set<String> permissionSet = userManager.getUserPermissions(username);
+        Set<String> permissionSet = userManager.getPermissions(username);
         simpleAuthorizationInfo.setStringPermissions(permissionSet);
         return simpleAuthorizationInfo;
     }
