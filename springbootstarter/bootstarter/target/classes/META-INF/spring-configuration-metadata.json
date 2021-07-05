@@ -1,0 +1,28 @@
+{
+  "groups": [
+    {
+      "name": "newland",
+      "type": "com.newland.starter.properties.SystemProperteis",
+      "sourceType": "com.newland.starter.properties.SystemProperteis"
+    }
+  ],
+  "properties": [
+    {
+      "name": "newland.email",
+      "type": "java.lang.String",
+      "sourceType": "com.newland.starter.properties.SystemProperteis"
+    },
+    {
+      "name": "newland.enable",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.newland.starter.properties.SystemProperteis",
+      "defaultValue": false
+    },
+    {
+      "name": "newland.phone",
+      "type": "java.lang.String",
+      "sourceType": "com.newland.starter.properties.SystemProperteis"
+    }
+  ],
+  "hints": []
+}

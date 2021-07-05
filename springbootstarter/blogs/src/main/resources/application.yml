@@ -1,0 +1,6 @@
+server:
+  port: 8080
+newland:
+  phone: 18683446911
+  email: 28974723@qq.com
+  enable: true

@@ -20,8 +20,8 @@
       <file leaf-file-name="RedisConfig.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/newland/redis/common/RedisConfig.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-285">
-              <caret line="39" column="12" selection-start-line="39" selection-start-column="12" selection-end-line="39" selection-end-column="12" />
+            <state relative-caret-position="209">
+              <caret line="44" column="88" lean-forward="true" selection-start-line="44" selection-start-column="88" selection-end-line="44" selection-end-column="88" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1722#1745#1" expanded="true" />
@@ -538,15 +538,16 @@
       <workItem from="1625379311631" duration="7619000" />
       <workItem from="1625412920723" duration="100000" />
       <workItem from="1625413420244" duration="7000" />
-      <workItem from="1625413452322" duration="612000" />
+      <workItem from="1625413452322" duration="1430000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="26357000" />
+    <option name="totallyTimeSpent" value="27175000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.12475248" side_tool="true" weight="0.62969005" />
@@ -948,8 +949,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/newland/redis/common/RedisConfig.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-285">
-          <caret line="39" column="12" selection-start-line="39" selection-start-column="12" selection-end-line="39" selection-end-column="12" />
+        <state relative-caret-position="209">
+          <caret line="44" column="88" lean-forward="true" selection-start-line="44" selection-start-column="88" selection-end-line="44" selection-end-column="88" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1722#1745#1" expanded="true" />
