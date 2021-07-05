@@ -19,7 +19,10 @@ import java.util.Set;
 public class ShiroRealm extends AuthorizingRealm {
     @Autowired
     private UserManager userManager;
-
+    @Override
+    public boolean supports(AuthenticationToken token) {
+        return token instanceof JWTToken;
+    }
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         String token = (String) authenticationToken.getCredentials();
@@ -34,12 +37,12 @@ public class ShiroRealm extends AuthorizingRealm {
         if(user==null){
             throw new RuntimeException("请重新登录");
         }
-        return new SimpleAuthenticationInfo(token, token, username);
+        return new SimpleAuthenticationInfo(username, token, username);
     }
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection token) {
-        String username = JwtTokenUtil.getUserNmae(token.toString());
+        String username = token.toString();
 
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
 

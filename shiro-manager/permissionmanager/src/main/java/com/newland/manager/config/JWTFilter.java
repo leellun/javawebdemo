@@ -28,12 +28,12 @@ import java.io.PrintWriter;
 public class JWTFilter extends BasicHttpAuthenticationFilter {
     @Autowired
     private PManagerProperties properties;
-    private AntPathMatcher pathMatcher=new AntPathMatcher();
+    private AntPathMatcher pathMatcher = new AntPathMatcher();
 
     @SneakyThrows
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
-        HttpServletRequest httpServletRequest= (HttpServletRequest) request;
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String[] anonUrl = StringUtils.splitByWholeSeparatorPreserveAllTokens(properties.getShiro().getAnonUrl(), StringPool.COMMA);
         boolean match = false;
         for (String u : anonUrl) {
@@ -49,11 +49,11 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
 
     @Override
     protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
-        HttpServletRequest httpServletRequest= (HttpServletRequest) request;
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String authHeader = httpServletRequest.getHeader(JwtTokenUtil.TOKEN_HEADER);
         if (!org.springframework.util.StringUtils.isEmpty(authHeader) && authHeader.startsWith(JwtTokenUtil.TOKEN_PREFIX)) {
             String authToken = authHeader.substring(JwtTokenUtil.TOKEN_PREFIX.length());
-            if(!StringUtils.isEmpty(authToken)){
+            if (!StringUtils.isEmpty(authToken)) {
                 return true;
             }
         }
@@ -63,13 +63,18 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
     @Override
     protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        String token = httpServletRequest.getHeader(JwtTokenUtil.TOKEN_HEADER);
-        JWTToken jwtToken = new JWTToken(token);
-        try {
-            getSubject(request, response).login(jwtToken);
-            return true;
-        } catch (Exception e) {
-            log.error(e.getMessage());
+        String authHeader = httpServletRequest.getHeader(JwtTokenUtil.TOKEN_HEADER);
+        if (StringUtils.isNotEmpty(authHeader) && authHeader.startsWith(JwtTokenUtil.TOKEN_PREFIX)) {
+            String authToken = authHeader.substring(JwtTokenUtil.TOKEN_PREFIX.length());
+            JWTToken jwtToken = new JWTToken(authToken);
+            try {
+                getSubject(request, response).login(jwtToken);
+                return true;
+            } catch (Exception e) {
+                log.error(e.getMessage());
+                return false;
+            }
+        } else {
             return false;
         }
     }
@@ -98,7 +103,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         httpResponse.setContentType("application/json; charset=utf-8");
         final String message = "未认证，请在前端系统进行认证";
         try (PrintWriter out = httpResponse.getWriter()) {
-            out.print(JSONUtils.toJSONString(Response.error(401,message)));
+            out.print(JSONUtils.toJSONString(Response.error(401, message)));
         } catch (IOException e) {
             log.error("sendChallenge error：", e);
         }

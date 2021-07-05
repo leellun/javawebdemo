@@ -8,7 +8,7 @@ import java.util.Map;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author leellun
@@ -17,5 +17,10 @@ import java.util.Map;
 public interface IUserService extends IService<User> {
 
     Response login(String username, String password);
+
     User getUser(String username);
+
+    Response info(String username);
+
+    Response list(String username);
 }

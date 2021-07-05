@@ -22,7 +22,7 @@ public class JwtTokenUtil {
         String username;
         try {
             DecodedJWT jwt = JWT.decode(jwtToken);
-            return jwt.getClaim("usernmae").asString();
+            return jwt.getClaim("username").asString();
         } catch (Exception e) {
             username = null;
         }

@@ -8,6 +8,7 @@ import com.newland.manager.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Component
@@ -23,20 +24,21 @@ public class UserManager {
     private RedisUtil redisUtil;
 
     public Set<String> getRoles(String username) {
+        redisUtil.del(getRoleKey(username));
         Set<String> roleSet = (Set<String>) redisUtil.get(getRoleKey(username));
         if (roleSet == null) {
             roleSet = roleService.getUserRoles(username);
+            redisUtil.set(getRoleKey(username), roleSet, EXPIRE_TIME);
         }
-        Set<String> permissions = (Set<String>) redisUtil.get(getPermissionKey(username));
-        if (permissions == null) {
-            permissions =
-        }
+        return roleSet;
     }
 
     public Set<String> getPermissions(String username) {
+        redisUtil.del(getPermissionKey(username));
         Set<String> permissions = (Set<String>) redisUtil.get(getPermissionKey(username));
         if (permissions == null) {
-            permissions =
+            permissions = new HashSet(menuService.getPermissions(username));
+            redisUtil.set(getPermissionKey(username), permissions, EXPIRE_TIME);
         }
         return permissions;
     }
@@ -51,11 +53,12 @@ public class UserManager {
 
     public User getUser(String username) {
         String key = String.format("user-%s", username);
+        redisUtil.del(key);
         User user = (User) redisUtil.get(key);
         if (user == null) {
             user = userService.getUser(username);
             if (user != null) {
-                redisUtil.set(key, user,EXPIRE_TIME );
+                redisUtil.set(key, user, EXPIRE_TIME);
             }
         }
         return user;

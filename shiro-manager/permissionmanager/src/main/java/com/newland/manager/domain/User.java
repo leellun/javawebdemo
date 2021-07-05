@@ -3,6 +3,9 @@ package com.newland.manager.domain;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+import lombok.ToString;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -15,6 +18,8 @@ import java.time.LocalDateTime;
  * @since 2021-07-03
  */
 @TableName("t_user")
+@ToString
+@Data
 public class User implements Serializable {
 
 
@@ -28,6 +33,7 @@ public class User implements Serializable {
      * 用户名
      */
     private String USERNAME;
+    private String avatar;
 
     /**
      * 密码
@@ -63,92 +69,4 @@ public class User implements Serializable {
      * 最近访问时间
      */
     private LocalDateTime LAST_LOGIN_TIME;
-
-
-    public Long getID() {
-        return ID;
-    }
-
-    public void setID(Long ID) {
-        this.ID = ID;
-    }
-
-    public String getUSERNAME() {
-        return USERNAME;
-    }
-
-    public void setUSERNAME(String USERNAME) {
-        this.USERNAME = USERNAME;
-    }
-
-    public String getPASSWORD() {
-        return PASSWORD;
-    }
-
-    public void setPASSWORD(String PASSWORD) {
-        this.PASSWORD = PASSWORD;
-    }
-
-    public String getEMAIL() {
-        return EMAIL;
-    }
-
-    public void setEMAIL(String EMAIL) {
-        this.EMAIL = EMAIL;
-    }
-
-    public String getMOBILE() {
-        return MOBILE;
-    }
-
-    public void setMOBILE(String MOBILE) {
-        this.MOBILE = MOBILE;
-    }
-
-    public String getSTATUS() {
-        return STATUS;
-    }
-
-    public void setSTATUS(String STATUS) {
-        this.STATUS = STATUS;
-    }
-
-    public LocalDateTime getCREATE_TIME() {
-        return CREATE_TIME;
-    }
-
-    public void setCREATE_TIME(LocalDateTime CREATE_TIME) {
-        this.CREATE_TIME = CREATE_TIME;
-    }
-
-    public LocalDateTime getMODIFY_TIME() {
-        return MODIFY_TIME;
-    }
-
-    public void setMODIFY_TIME(LocalDateTime MODIFY_TIME) {
-        this.MODIFY_TIME = MODIFY_TIME;
-    }
-
-    public LocalDateTime getLAST_LOGIN_TIME() {
-        return LAST_LOGIN_TIME;
-    }
-
-    public void setLAST_LOGIN_TIME(LocalDateTime LAST_LOGIN_TIME) {
-        this.LAST_LOGIN_TIME = LAST_LOGIN_TIME;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-        "ID=" + ID +
-        ", USERNAME=" + USERNAME +
-        ", PASSWORD=" + PASSWORD +
-        ", EMAIL=" + EMAIL +
-        ", MOBILE=" + MOBILE +
-        ", STATUS=" + STATUS +
-        ", CREATE_TIME=" + CREATE_TIME +
-        ", MODIFY_TIME=" + MODIFY_TIME +
-        ", LAST_LOGIN_TIME=" + LAST_LOGIN_TIME +
-        "}";
-    }
 }

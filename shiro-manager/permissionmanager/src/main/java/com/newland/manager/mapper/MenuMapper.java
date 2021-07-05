@@ -2,6 +2,9 @@ package com.newland.manager.mapper;
 
 import com.newland.manager.domain.Menu;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2021-07-03
  */
 public interface MenuMapper extends BaseMapper<Menu> {
-
+    List<String> selectMenus(@Param("roleIds") List<Long> roleIds);
 }
