@@ -1,5 +1,7 @@
 package com.newland.manager.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 
@@ -13,12 +15,19 @@ import java.io.Serializable;
  */
 @TableName("t_role_menu")
 public class RoleMenu implements Serializable {
-
-
+    @TableId(value = "ID", type = IdType.AUTO)
+    private Long ID;
     private Long ROLE_ID;
 
     private Long MENU_ID;
 
+    public void setID(Long ID) {
+        this.ID = ID;
+    }
+
+    public Long getID() {
+        return ID;
+    }
 
     public Long getROLE_ID() {
         return ROLE_ID;

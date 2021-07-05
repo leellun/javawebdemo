@@ -1,5 +1,6 @@
 package com.newland.manager.config;
 
+import com.baomidou.mybatisplus.annotation.OrderBy;
 import org.apache.shiro.authc.Authenticator;
 import org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy;
 import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
@@ -13,6 +14,7 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 
 import java.util.LinkedHashMap;
 
@@ -47,10 +49,11 @@ public class ShiroConfig {
         return new LifecycleBeanPostProcessor();
     }
 
-    @ConditionalOnBean(LifecycleBeanPostProcessor.class)
     @Bean
     public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator() {
-        return new DefaultAdvisorAutoProxyCreator();
+        DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
+        advisorAutoProxyCreator.setProxyTargetClass(true);
+        return advisorAutoProxyCreator;
     }
 
     @Bean

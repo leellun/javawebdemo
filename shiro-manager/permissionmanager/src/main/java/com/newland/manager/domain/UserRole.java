@@ -1,5 +1,7 @@
 package com.newland.manager.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 
@@ -13,6 +15,9 @@ import java.io.Serializable;
  */
 @TableName("t_user_role")
 public class UserRole implements Serializable {
+    @TableId(value = "ID", type = IdType.AUTO)
+    private Long ID;
+
 
 
     /**
@@ -41,7 +46,13 @@ public class UserRole implements Serializable {
     public void setROLE_ID(Long ROLE_ID) {
         this.ROLE_ID = ROLE_ID;
     }
+    public void setID(Long ID) {
+        this.ID = ID;
+    }
 
+    public Long getID() {
+        return ID;
+    }
     @Override
     public String toString() {
         return "User_role{" +
