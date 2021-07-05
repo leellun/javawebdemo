@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping("/api/user")
-@CrossOrigin
 public class UserController {
     @Autowired
     private IUserService service;
@@ -36,13 +35,13 @@ public class UserController {
 
     @RequestMapping("/info")
     @ResponseBody
-    @PreAuthorize("home")
+    @PreAuthorize("hasAuthority('home')")
     public Response info() {
         return service.info(SecurityContextHolder.getContext().getAuthentication().getName());
     }
     @RequestMapping("/list")
     @ResponseBody
-    @PreAuthorize("user-manage")
+    @PreAuthorize("hasAuthority('user-manage')")
     public Response list(){
         return service.list(SecurityContextHolder.getContext().getAuthentication().toString());
     }

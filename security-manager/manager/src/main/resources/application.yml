@@ -27,9 +27,9 @@ spring:
     auto: true
   redis:
     database: 1
-    host: localhost
+    host: 192.168.10.103
     port: 6379
-#    password: 123456
+    password: 123456
     jedis:
       pool:
         max-active: 8
