@@ -1,5 +1,6 @@
 package com.newland.springdatademo.test1;
 
+import com.newland.springdatademo.po.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +15,7 @@ public class PersonService {
 	
 	@Transactional
 	public void savePersons(List<Person> persons){
-		personRepository.save(persons);
+//		personRepository.save(persons);
 	}
 	
 	@Transactional

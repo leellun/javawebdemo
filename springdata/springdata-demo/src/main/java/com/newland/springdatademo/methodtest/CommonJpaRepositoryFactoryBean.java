@@ -12,6 +12,10 @@ import java.io.Serializable;
 public class CommonJpaRepositoryFactoryBean<T extends Repository<S, ID>, S, ID extends Serializable>
 		extends JpaRepositoryFactoryBean<T, S, ID> {
 
+	public CommonJpaRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
+		super(repositoryInterface);
+	}
+
 	protected RepositoryFactorySupport createRepositoryFactory(
 			EntityManager entityManager) {
 		return new CommonRepositoryFactory(entityManager);

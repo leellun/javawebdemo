@@ -60,7 +60,7 @@ public class SpringDataTest {
 	public void testJpaSpecificationExecutor(){
 		int pageNo = 3 - 1;
 		int pageSize = 5;
-		PageRequest pageable = new PageRequest(pageNo, pageSize);
+		PageRequest pageable = PageRequest.of(pageNo, pageSize);
 
 		//通常使用 Specification 的匿名内部类
 		Specification<Person> specification = new Specification<Person>() {
@@ -112,9 +112,9 @@ public class SpringDataTest {
 		//Order 是具体针对于某一个属性进行升序还是降序.
 		Order order1 = new Order(Direction.DESC, "id");
 		Order order2 = new Order(Direction.ASC, "email");
-		Sort sort = new Sort(order1, order2);
+		Sort sort =Sort.by(order1, order2);
 
-		PageRequest pageable = new PageRequest(pageNo, pageSize, sort);
+		PageRequest pageable = PageRequest.of(pageNo, pageSize, sort);
 		Page<Person> page = personRepository.findAll(pageable);
 
 		System.out.println("总记录数: " + page.getTotalElements());

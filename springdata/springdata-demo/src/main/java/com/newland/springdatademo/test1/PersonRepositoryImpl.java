@@ -1,5 +1,7 @@
 package com.newland.springdatademo.test1;
 
+import com.newland.springdatademo.po.Person;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 

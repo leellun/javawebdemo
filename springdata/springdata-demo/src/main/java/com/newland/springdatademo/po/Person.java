@@ -1,5 +1,7 @@
 package com.newland.springdatademo.po;
 
+import com.newland.springdatademo.po.Address;
+
 import javax.persistence.*;
 import java.util.Date;
 
