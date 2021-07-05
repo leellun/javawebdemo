@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newland.manager.mapper.MenuMapper">
+    <select id="selectMenus" resultType="java.lang.String">
+        select component from t_menu t1 inner join t_role_menu t2 on t1.id=t2.menu_id and t2.role_id in
+        <foreach collection="roleIds" open="(" close=")" item="roleId" separator=",">
+            #{roleId}
+        </foreach>
+    </select>
+</mapper>
