@@ -6,7 +6,7 @@ import org.springframework.data.repository.NoRepositoryBean;
 import javax.persistence.EntityManager;
 import java.io.Serializable;
 
-@NoRepositoryBean
+//@NoRepositoryBean
 public class CommonMethodTestImpl<T, ID extends Serializable> 
 	extends SimpleJpaRepository<T, ID> implements CommonMethodTest<T, ID> {
 

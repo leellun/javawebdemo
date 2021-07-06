@@ -5,7 +5,7 @@ import org.springframework.data.repository.NoRepositoryBean;
 
 import java.io.Serializable;
 
-@NoRepositoryBean
+//@NoRepositoryBean
 public interface CommonMethodTest<T, ID extends Serializable> 
 	extends JpaRepository<T, ID> {
 
