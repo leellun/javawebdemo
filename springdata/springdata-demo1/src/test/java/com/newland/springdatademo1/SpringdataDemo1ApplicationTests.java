@@ -1,10 +1,10 @@
 package com.newland.springdatademo1;
 
+import com.newland.springdatademo1.custom.AddressRepository;
 import com.newland.springdatademo1.pojo.Person;
-import com.newland.springdatademo1.repository.PersonRepsotory;
+import com.newland.springdatademo1.repository.PersonRepository;
 import com.newland.springdatademo1.service.PersonService;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -15,8 +15,6 @@ import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
 import javax.sql.DataSource;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,12 +25,12 @@ import java.util.List;
 class SpringdataDemo1ApplicationTests {
 
     private ApplicationContext ctx = null;
-    private PersonRepsotory personRepsotory = null;
+    private PersonRepository personRepsotory = null;
     private PersonService personService;
 
     {
         ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
-        personRepsotory = ctx.getBean(PersonRepsotory.class);
+        personRepsotory = ctx.getBean(PersonRepository.class);
         personService = ctx.getBean(PersonService.class);
     }
 
@@ -191,8 +189,22 @@ class SpringdataDemo1ApplicationTests {
         System.out.println("当前页面的 List: " + page.getContent());
         System.out.println("当前页面的记录数: " + page.getNumberOfElements());
     }
+
+    /**
+     * 自定义方法调用
+     */
     @Test
     public void testCustomRepositoryMethod(){
         personRepsotory.test();
+    }
+
+    /**
+     * 自定义JpaRepositoryFactoryBean
+     */
+    @Test
+    public void testCommonCustomRepositoryMethod(){
+        ApplicationContext ctx2 = new ClassPathXmlApplicationContext("classpath:applicationContext2.xml");
+        AddressRepository addressRepository = ctx2.getBean(AddressRepository.class);
+        addressRepository.method();
     }
 }

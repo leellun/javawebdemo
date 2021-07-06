@@ -1,5 +1,5 @@
 package com.newland.springdatademo1.repository;
 
-public interface PersonExtraRepository {
+public interface PersonDao {
 	void test();
 }
