@@ -1,5 +1,0 @@
-com\newland\starter\service\IMessageService.class
-com\newland\starter\properties\SystemProperteis.class
-META-INF\spring-configuration-metadata.json
-com\newland\starter\service\impl\MessageServiceImpl.class
-com\newland\starter\config\SystemConfig.class

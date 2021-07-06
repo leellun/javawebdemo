@@ -1,0 +1,7 @@
+/.idea
+/target
+/lottery
+lottery_error.log
+/*.json
+/lotteryOmit-*
+/logs
