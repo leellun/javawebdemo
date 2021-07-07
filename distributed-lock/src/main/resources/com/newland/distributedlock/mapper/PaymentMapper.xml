@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newland.distributedlock.mapper.DbLock">
+    <insert id="lock">
+        insert into t_method_lock(method_name) value (#{methodName})
+    </insert>
+    <delete id="unLock">
+        delete from t_method_lock where method_name=#{methodName}
+    </delete>
+</mapper>
