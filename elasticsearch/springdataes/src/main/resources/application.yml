@@ -1,0 +1,8 @@
+
+server:
+  port: 8080
+elasticsearch:
+  host: 192.168.10.103
+  port: 9200
+logging:
+  level: debug
