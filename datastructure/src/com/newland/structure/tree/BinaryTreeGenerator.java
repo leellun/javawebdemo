@@ -12,50 +12,23 @@ public class BinaryTreeGenerator {
 
     public void generatorBinaryTree(int[] pres, int[] ins) {
         Deque<Integer> deque = new LinkedList<>();
-        generatorBinnaryTree(pres, ins, 0, 0, ins.length - 1, deque);
+        generatorBinnaryTree(pres, 0, pres.length - 1, ins, 0, ins.length - 1, deque);
         System.out.println(Arrays.toString(deque.toArray(new Integer[]{})));
     }
 
-    private void generatorBinnaryTree(int[] pres, int[] ins, int preStart, int inStart, int length, Deque<Integer> deque) {
-        if (length < 1 || preStart >= pres.length - 1) return;
-        System.out.println(preStart + "==>" + inStart + "===<" + length);
-        int i = inStart;
-        for (; ins[i] != pres[preStart]; i++) ;
-        if(pres[preStart]==8){
-            System.out.println();
-        }
 
-        generatorBinnaryTree(pres, ins, preStart + 1, inStart, i, deque);
-        generatorBinnaryTree(pres, ins, preStart + i + 1, inStart + i + 1, length - i - 1, deque);
-        deque.add(pres[preStart]);
+    private void generatorBinnaryTree(int[] preOrder, int start1, int end1, int[] inOrder, int start2, int end2, Deque<Integer> deque) {
+        if (start1 > end1 || start2 > end2) return;
+        int i = start2;
+        //获取根节点在中序队列中位置
+        for (; inOrder[i] != preOrder[start1]; i++) ;
+        //左子树
+        generatorBinnaryTree(preOrder, start1 + 1, start1 + i - start2, inOrder, start2, i - 1, deque);
+        //右子树
+        generatorBinnaryTree(preOrder, start1 + i - start2 + 1, end1, inOrder, i + 1, end2, deque);
+        deque.add(preOrder[start1]);
     }
 
-//    void posttraverse(char *preorder, char *inorder, int len)//求后序
-//    {
-//        if (len == 0) return;
-//        int rootindex = 0;
-//        node newnode;
-//        newnode.data = preorder[0];//先序字符串的首元素是根节点
-//        for (rootindex = 0; preorder[0] != inorder[rootindex]; rootindex++) ;//这一步是找到根节点在中序字符串中的位置
-//        posttraverse(preorder + 1, inorder, rootindex);//递归遍历左子树
-//        posttraverse(preorder + rootindex + 1, inorder + rootindex + 1, len - rootindex - 1);//递归遍历右子树
-//        cout <<*preorder;//打印根节点，为什么要放在最后呢?因为这是求后序遍历，如果是求先序遍历
-//        //就在递归之前打印根节点
-//    }
-
-
-//    vector<int> ans;
-//
-//    void postOrder(int pre[], int in[], int length) {//同一二叉树的各种遍历序列一样长
-//        if (length < 1) return;
-//        int i = 0;
-//        while (in[i] != pre[0]) ++i;
-//        //左+右+根
-//        postOrder(pre + 1, in, i);
-//        postOrder(pre + i + 1, in + i + 1, length - i - 1);
-//        ans.push_back(pre[0]);
-//    }
-//
 //    void preOrder(int post[], int in[], int length) {
 //        if (length < 1) return;
 //        int i = 0;
