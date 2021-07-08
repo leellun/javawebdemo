@@ -167,6 +167,19 @@ public class LinkedBinaryTree<T> implements BinaryTree<T> {
 
     @Override
     public void levelOrderByStack() {
+        if (root == null) return;
+        Queue<Node> queue = new LinkedList<Node>();
+        queue.add(root);
+        while (queue.size() != 0) {
+            int len = queue.size();
+            for (int i = 0; i < len; i++) {
+                Node temp = queue.poll();
+                System.out.print(temp.value + " ");
+                if (temp.left != null) queue.add(temp.left);
+                if (temp.right != null) queue.add(temp.right);
+            }
+        }
 
+        System.out.println();
     }
 }
