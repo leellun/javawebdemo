@@ -198,13 +198,4 @@ class SpringdataDemo1ApplicationTests {
         personRepsotory.test();
     }
 
-    /**
-     * 自定义JpaRepositoryFactoryBean
-     */
-    @Test
-    public void testCommonCustomRepositoryMethod(){
-        ApplicationContext ctx2 = new ClassPathXmlApplicationContext("classpath:applicationContext2.xml");
-        AddressRepository addressRepository = ctx2.getBean(AddressRepository.class);
-        addressRepository.method();
-    }
 }
