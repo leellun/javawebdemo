@@ -1,26 +1,89 @@
 package com.newland.structure.rbtree;
 
 public class RBTree2<T extends Comparable> {
-    private Node root;
+    public static void main(String[] args) {
+        RBTree2 tree1 = new RBTree2();
+        tree1.add(70);
+        tree1.prePrint(tree1.root);
+        System.out.println();
+        tree1.add(60);
+        tree1.prePrint(tree1.root);
+        System.out.println();
+        tree1.add(50);
+        tree1.prePrint(tree1.root);
+        System.out.println();
+        tree1.add(40);
+        tree1.prePrint(tree1.root);
+        System.out.println();
+        tree1.add(30);
+        tree1.prePrint(tree1.root);
+        System.out.println();
+        tree1.add(55);
+        tree1.prePrint(tree1.root);
+        System.out.println();
+        tree1.add(53);
+        tree1.prePrint(tree1.root);
+        System.out.println();
+        tree1.add(54);
+        tree1.prePrint(tree1.root);
+        System.out.println();
+        tree1.add(20);
+        tree1.prePrint(tree1.root);
+        System.out.println();
+        tree1.add(10);
+        tree1.prePrint(tree1.root);
+        System.out.println();
+        tree1.add(9);
+        tree1.prePrint(tree1.root);
+        System.out.println();
+        tree1.add(1);
+        tree1.prePrint(tree1.root);
+        System.out.println();
+        tree1.add(3);
+        tree1.prePrint(tree1.root);
+        System.out.println();
+    }
+
+    private void prePrint(Node node) {
+        System.out.print(node.value + "," + (node.red ? "red" : "black") + "  ");
+        if (node.left != null) {
+            this.prePrint(node.left);
+        }
+        if (node.right != null) {
+            this.prePrint(node.right);
+        }
+    }
+
+    public Node root;
 
     public void add(T value) {
         if (root == null) {
             root = new Node(value);
+            root.red = false;
             return;
         }
         Node parent = root;
         Node newNode;
         while (true) {
             if (value.compareTo(parent.value) >= 0) {
-                newNode = new Node(value);
-                newNode.parent = parent;
-                parent.right = newNode;
-                break;
+                if (parent.right == null) {
+                    newNode = new Node(value);
+                    newNode.parent = parent;
+                    parent.right = newNode;
+                    break;
+                } else {
+                    parent = parent.right;
+                }
             } else {
-                newNode = new Node(value);
-                newNode.parent = parent;
-                parent.left = newNode;
-                break;
+                if (parent.left == null) {
+                    newNode = new Node(value);
+                    newNode.parent = parent;
+                    parent.left = newNode;
+                    break;
+                } else {
+                    parent = parent.left;
+                }
+
             }
         }
         fixNode(newNode);
@@ -38,8 +101,9 @@ public class RBTree2<T extends Comparable> {
         if (uncle != null && uncle.red) {
             node.red = true;
             node.parent.red = false;
-            node.getUncle().red = false;
-            this.fixNode(node);
+            uncle.red = false;
+            node.getGrandParent().red = true;
+            this.fixNode(node.getGrandParent());
         } else {
             if (node.isLeft() && node.parent.isLeft()) {
                 fixLeftNode(node);
@@ -74,7 +138,7 @@ public class RBTree2<T extends Comparable> {
         Node parent = node.parent;
         if (node != root) {
             if (node.isLeft()) {
-                node.left = right;
+                parent.left = right;
             } else {
                 parent.right = right;
             }
@@ -87,27 +151,28 @@ public class RBTree2<T extends Comparable> {
             right.left.parent = node;
         }
         right.left = node;
+        right.parent = parent;
     }
 
     private void rotateRight(Node node) {
         Node left = node.left;
         Node parent = node.parent;
-        if (parent != root) {
+        if (node != root) {
             if (node.isLeft()) {
-                node.parent.left = left;
+                parent.left = left;
             } else {
-                node.parent.right = left;
+                parent.right = left;
             }
         } else {
             root = left;
         }
         node.parent = left;
         left.parent = parent;
-        left.right = node;
         node.left = left.right;
         if (left.right != null) {
             left.right.parent = node;
         }
+        left.right = node;
     }
 
     private Node getNode(T val) {
@@ -180,14 +245,15 @@ public class RBTree2<T extends Comparable> {
             }
         }
     }
-    private void fixNoSon(Node node,Boolean del){
-        Node siblingNode=node.getSiblingNode();
-        Node parent=node.parent;
-        if(siblingNode.red){
-            parent.red=true;
-            siblingNode.red=false;
 
-        }else{
+    private void fixNoSon(Node node, Boolean del) {
+        Node siblingNode = node.getSiblingNode();
+        Node parent = node.parent;
+        if (siblingNode.red) {
+            parent.red = true;
+            siblingNode.red = false;
+
+        } else {
 
         }
     }
@@ -216,10 +282,10 @@ public class RBTree2<T extends Comparable> {
             //父节点是根节点
             if (parent.parent == null) {
                 return null;
-            } else if (parent.parent.left == this) {
+            } else if (parent.parent.left == parent) {
                 return parent.parent.right;
             } else {
-                return parent.parent.right;
+                return parent.parent.left;
             }
         }
 
@@ -234,12 +300,18 @@ public class RBTree2<T extends Comparable> {
         public Node<T> getGrandParent() {
             return parent.parent;
         }
-        public Node<T>  getSiblingNode() {
+
+        public Node<T> getSiblingNode() {
             if (this.isLeft()) {
                 return parent.right;
             } else {
                 return parent.left;
             }
+        }
+
+        @Override
+        public String toString() {
+            return value.toString();
         }
     }
 }

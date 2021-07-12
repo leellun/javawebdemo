@@ -1,23 +1,49 @@
 package com.newland.structure.rbtree;
 
 public class RBTree1 {
-    public static void main(String[] args){
-        RBTree1 tree1=new RBTree1();
+    public static void main(String[] args) {
+        RBTree1 tree1 = new RBTree1();
         tree1.put(70);
+        tree1.prePrint(tree1.root);
+        System.out.println();
         tree1.put(60);
+        tree1.prePrint(tree1.root);
+        System.out.println();
         tree1.put(50);
+        tree1.prePrint(tree1.root);
+        System.out.println();
         tree1.put(40);
+        tree1.prePrint(tree1.root);
+        System.out.println();
         tree1.put(30);
+        tree1.prePrint(tree1.root);
+        System.out.println();
         tree1.put(55);
+        tree1.prePrint(tree1.root);
+        System.out.println();
         tree1.put(53);
+        tree1.prePrint(tree1.root);
+        System.out.println();
         tree1.put(54);
+        tree1.prePrint(tree1.root);
+        System.out.println();
         tree1.put(20);
+        tree1.prePrint(tree1.root);
+        System.out.println();
         tree1.put(10);
+        tree1.prePrint(tree1.root);
+        System.out.println();
         tree1.put(9);
+        tree1.prePrint(tree1.root);
+        System.out.println();
         tree1.put(1);
+        tree1.prePrint(tree1.root);
+        System.out.println();
         tree1.put(3);
         tree1.prePrint(tree1.root);
+        System.out.println();
     }
+
     /**
      * 根节点
      */
@@ -223,7 +249,8 @@ public class RBTree1 {
     private Boolean isLeft(Node node) {
         return node == node.getParent().getLeft();
     }
-    private boolean isRight(Node node){
+
+    private boolean isRight(Node node) {
         return node == node.getParent().getRight();
     }
 
@@ -576,6 +603,7 @@ public class RBTree1 {
         public void setParent(Node parent) {
             this.parent = parent;
         }
+
         @Override
         public String toString() {
             return val.toString();
