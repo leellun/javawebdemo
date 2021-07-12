@@ -1,7 +1,5 @@
 package com.newland.structure.rbtree;
 
-import java.util.HashMap;
-
 public class RBTree<T extends Comparable> {
     private Node<T> root;
 
@@ -38,6 +36,7 @@ public class RBTree<T extends Comparable> {
                 }
             }
         }
+        fixNode(node);
     }
 
     private void fixNode(Node<T> node) {
@@ -55,21 +54,104 @@ public class RBTree<T extends Comparable> {
             this.getGrandParent(node).red = true;
             this.fixNode(this.getGrandParent(node));
         } else if (uncle == null || !uncle.red) {
+            if (this.isLeft(node) && node.parent == this.getGrandParent(node).left) {
+                this.fixLeftNode(node);
+            } else if (!this.isLeft(node) && node.parent == this.getGrandParent(node).right) {
+                this.fixRightNode(node);
+            } else if (!this.isLeft(node) && node.parent == this.getGrandParent(node).left) {
+                rotateLeft(node.parent);
+                this.fixLeftNode(node.left);
+            } else if (this.isLeft(node) && node.parent == this.getGrandParent(node).right) {
+                rotateRight(node.parent);
+                this.fixRightNode(node.right);
+            }
         }
-
-
     }
 
+    private void fixLeftNode(Node node) {
+        node.parent.setRed(false);
+        this.getGrandParent(node).setRed(true);
+        this.rotateRight(getGrandParent(node));
+    }
+
+    private void fixRightNode(Node node) {
+        node.parent.setRed(false);
+        this.getGrandParent(node).setRed(true);
+        this.rotateLeft(this.getGrandParent(node));
+    }
+
+    private void rotateLeft(Node node) {
+        Node right = node.right;
+        right.setParent(node.parent);
+        if (node != root) {
+            if (this.isLeft(node)) {
+                node.parent.setLeft(right);
+            } else {
+                node.parent.setRight(right);
+            }
+        } else {
+            root = right;
+        }
+        node.setRight(right.left);
+        if (right.left != null) {
+            right.left.setParent(node);
+        }
+        node.setParent(right);
+        right.setLeft(node);
+    }
+
+    private void rotateRight(Node node) {
+        Node left = node.left;
+        left.setParent(node.parent);
+        if (node != root) {
+            if (this.isLeft(node)) {
+                node.parent.setLeft(left);
+            } else {
+                node.parent.setRight(left);
+            }
+        } else {
+            root = left;
+        }
+        node.setLeft(left.right);
+        if (left.right != null) {
+            left.right.setParent(node);
+        }
+        node.setParent(left);
+        left.setRight(node);
+    }
+
+    /**
+     * 是否是父节点的左子节点
+     *
+     * @param node 待确认节点
+     * @return 是否是左子节点
+     */
+    private Boolean isLeft(Node node) {
+        return node == node.parent.left;
+    }
+
+    /**
+     * 叔节点
+     *
+     * @param node
+     * @return
+     */
     private Node getUncle(Node node) {
-        if (node.getParent() != root && node.getParent() == this.getGrandParent(node).left) {
-            return this.getGrandParent(node).left;
-        } else if (node.parent != root && node.getParent() == this.getGrandParent(node).right) {
-            return getGrandParent(node).right;
+        if (node.parent != root && node.parent == this.getGrandParent(node).left) {
+            return this.getGrandParent(node).right;
+        } else if (node.parent != root && node.parent == this.getGrandParent(node).right) {
+            return getGrandParent(node).left;
         } else {
             return null;
         }
     }
 
+    /**
+     * 祖父节点
+     *
+     * @param node
+     * @return
+     */
     private Node getGrandParent(Node node) {
         return node.parent.parent;
     }
@@ -86,40 +168,16 @@ public class RBTree<T extends Comparable> {
             this.red = true;
         }
 
-        public T getValue() {
-            return value;
-        }
-
-        public void setValue(T value) {
-            this.value = value;
-        }
-
-        public boolean isRed() {
-            return red;
-        }
-
         public void setRed(boolean red) {
             this.red = red;
-        }
-
-        public Node getLeft() {
-            return left;
         }
 
         public void setLeft(Node left) {
             this.left = left;
         }
 
-        public Node getRight() {
-            return right;
-        }
-
         public void setRight(Node right) {
             this.right = right;
-        }
-
-        public Node getParent() {
-            return parent;
         }
 
         public void setParent(Node parent) {
