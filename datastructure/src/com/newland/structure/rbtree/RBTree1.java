@@ -40,7 +40,7 @@ public class RBTree1 {
         tree1.prePrint(tree1.root);
         System.out.println();
         tree1.put(3);
-        tree1.prePrint(tree1.root);
+        tree1.midPrint(tree1.root);
         System.out.println();
     }
 
