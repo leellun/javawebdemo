@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">
+	<context:property-placeholder
+		location="classpath:dbconfig.properties" />
+	<context:component-scan
+		base-package="com.newland.cms">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.web.bind.annotation.RestController" />
+	</context:component-scan>
+	<!-- securityManager安全管理器定义 -->
+	<bean id="securityManager"
+		class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="cacheManager" ref="cacheManager"></property>
+		<property name="authenticator" ref="authenticator"></property>
+		<property name="realms">
+			<ref bean="shiroRealm" />
+		</property>
+	</bean>
+	<!-- 缓存管理 -->
+	<bean id="cacheManager"
+		class="org.apache.shiro.cache.ehcache.EhCacheManager">
+		<property name="cacheManagerConfigFile"
+			value="classpath:ehcache.xml"></property>
+	</bean>
+	<!-- 认证授权 -->
+	<bean id="authenticator"
+		class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
+		<property name="authenticationStrategy">
+			<bean
+				class="org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy"></bean>
+		</property>
+	</bean>
+
+	<!-- 配置 Realm -->
+	<bean id="shiroRealm" class="com.newland.cms.config.ShiroRealm"></bean>
+
+
+	<!-- 配置 LifecycleBeanPostProcessor. 调用配置在 Spring IOC 容器中 shiro bean 的生命周期方法. -->
+	<bean id="lifecycleBeanPostProcessor"
+		class="org.apache.shiro.spring.LifecycleBeanPostProcessor"></bean>
+	<bean
+		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+		depends-on="lifecycleBeanPostProcessor"></bean>
+	<bean
+		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager"></property>
+	</bean>
+
+	<bean id="shiroFilter"
+		class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager"></property>
+		<property name="filters">
+			<map>
+				<entry key="jwt">
+					<bean class="com.newland.cms.config.JWTFilter"></bean>
+				</entry>
+			</map>
+		</property>
+		<property name="filterChainDefinitions">
+			<value>
+				/login=anon
+				/logout/**=anon
+				/dict/trim=anon
+				/regist=anon
+				/user/check/**=anon
+				/swagger-resources/**=anon
+				/webjars/**=anon
+				/v2/**=anon
+				/swagger-ui.html/**=anon
+				/favicon.ico=anon
+				/**=jwt
+			</value>
+		</property>
+	</bean>
+	<!-- 数据库连接池 -->
+	<bean id="dataSource"
+		class="com.alibaba.druid.pool.DruidDataSource" init-method="init"
+		destroy-method="close">
+		<!--<property name="dbType" value="${dbType}"></property> -->
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+
+		<property name="filters" value="stat" />
+		<property name="proxyFilters">
+			<list>
+				<ref bean="stat-filter" />
+				<ref bean="wall-filter" />
+			</list>
+		</property>
+
+		<property name="maxActive" value="50" />
+		<property name="initialSize" value="10" />
+		<property name="maxWait" value="60000" />
+		<property name="minIdle" value="10" />
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+		<property name="validationQuery" value="SELECT 'x'" />
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+		<!-- <property name="poolPreparedStatements" value="false" /> <property 
+			name="maxPoolPreparedStatementPerConnectionSize" value="50" /> -->
+	</bean>
+	<bean id="stat-filter"
+		class="com.alibaba.druid.filter.stat.StatFilter" />
+	<bean id="wall-filter" class="com.alibaba.druid.wall.WallFilter">
+		<property name="config" ref="wall-config" />
+	</bean>
+	<bean id="wall-config" class="com.alibaba.druid.wall.WallConfig">
+		<property name="multiStatementAllow" value="true" />
+	</bean>
+	<!-- spring事务管理 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<!-- 开启基于注解的事务 -->
+	<tx:annotation-driven
+		transaction-manager="transactionManager" />
+	<aop:aspectj-autoproxy expose-proxy="true"
+		proxy-target-class="true" />
+	<bean id="sqlSessionFactory"
+		class="com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations"
+			value="classpath:com/newland/cms/**/*.xml"></property>
+		<property name="typeAliasesPackage"
+			value="com.newland.cms.domain"></property>
+		<property name="plugins">
+			<array>
+				<bean
+					class="com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor">
+					<property name="interceptors">
+						<array>
+							<bean
+								class="com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor"></bean>
+						</array>
+					</property>
+				</bean>
+			</array>
+		</property>
+	</bean>
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage"
+			value="com.newland.cms.**.mapper"></property>
+	</bean>
+</beans>
